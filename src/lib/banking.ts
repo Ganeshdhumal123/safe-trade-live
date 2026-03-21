@@ -149,7 +149,8 @@ export function isLoggedIn(): boolean {
 
 export function checkTrader(traderId: string): { found: boolean; verified: boolean; name: string } {
   const id = traderId.toUpperCase();
-  const trader = TRADERS[id];
+  const traders = loadTraders();
+  const trader = traders[id];
   if (!trader) return { found: false, verified: false, name: "" };
   return { found: true, verified: trader.verified, name: trader.name };
 }
