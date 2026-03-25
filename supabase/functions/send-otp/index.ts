@@ -24,8 +24,8 @@ serve(async (req) => {
 
     const otp = String(Math.floor(1000 + Math.random() * 9000));
 
-    const gmailUser = Deno.env.get("GMAIL_USER");
-    const gmailPass = Deno.env.get("GMAIL_APP_PASSWORD");
+    const gmailUser = (Deno.env.get("GMAIL_USER") || "").trim();
+    const gmailPass = (Deno.env.get("GMAIL_APP_PASSWORD") || "").trim();
 
     if (!gmailUser || !gmailPass) {
       console.error("Missing GMAIL_USER or GMAIL_APP_PASSWORD secrets");
