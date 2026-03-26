@@ -4,35 +4,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { initDemoUser } from "@/lib/banking";
-import { User, LogIn, ArrowLeft } from "lucide-react";
+import { Briefcase, LogIn, ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
-import { useEffect } from "react";
 
-const DEMO_USERS = [
-  { email: "user@bank.com", password: "user1234", name: "Jamie Wilson" },
+const DEMO_TRADERS = [
+  { email: "trader@bank.com", password: "trader1234", name: "Global Payments Corp", traderId: "T1" },
+  { email: "trader2@bank.com", password: "trader1234", name: "SecureTrade Inc", traderId: "T3" },
 ];
 
-export default function UserLogin() {
+export default function TraderLogin() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("user@bank.com");
-  const [password, setPassword] = useState("user1234");
+  const [email, setEmail] = useState("trader@bank.com");
+  const [password, setPassword] = useState("trader1234");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  useEffect(() => { initDemoUser(); }, []);
-
   const handleLogin = () => {
-    const user = DEMO_USERS.find(u => u.email === email && u.password === password);
-    if (!user) {
+    const trader = DEMO_TRADERS.find(t => t.email === email && t.password === password);
+    if (!trader) {
       setMessage({ text: "Invalid email or password.", type: "error" });
       return;
     }
     localStorage.setItem("logged_in", "true");
-    localStorage.setItem("user_role", "user");
-    localStorage.setItem("user_name", user.name);
+    localStorage.setItem("user_role", "trader");
+    localStorage.setItem("user_name", trader.name);
     localStorage.setItem("user_email", email);
-    setMessage({ text: `Welcome, ${user.name}!`, type: "success" });
-    setTimeout(() => navigate("/user-dashboard"), 800);
+    localStorage.setItem("trader_id", trader.traderId);
+    setMessage({ text: `Welcome, ${trader.name}!`, type: "success" });
+    setTimeout(() => navigate("/trader-dashboard"), 800);
   };
 
   return (
@@ -40,11 +38,11 @@ export default function UserLogin() {
       <div className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md animate-fade-in shadow-xl border-primary/10">
           <CardHeader className="text-center space-y-3">
-            <div className="mx-auto w-16 h-16 rounded-2xl bg-accent flex items-center justify-center">
-              <User className="w-8 h-8 text-accent-foreground" />
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <Briefcase className="w-8 h-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl font-bold">User Login</CardTitle>
-            <CardDescription>Sign in to view trader information and directory</CardDescription>
+            <CardTitle className="text-2xl font-bold">Trader Login</CardTitle>
+            <CardDescription>Sign in to manage your trader account</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -67,18 +65,18 @@ export default function UserLogin() {
               </div>
             )}
 
-            <Button onClick={handleLogin} className="w-full" size="lg">Sign In as User</Button>
+            <Button onClick={handleLogin} className="w-full" size="lg">Sign In as Trader</Button>
 
             <p className="text-xs text-center text-muted-foreground">
-              Demo: user@bank.com / user1234
+              Demo: trader@bank.com / trader1234
             </p>
 
             <div className="flex items-center justify-center gap-4 text-sm">
               <Link to="/" className="text-muted-foreground hover:text-foreground flex items-center gap-1">
                 <ArrowLeft className="w-3 h-3" /> Home
               </Link>
-              <Link to="/admin-login" className="text-primary hover:underline">
-                Admin Login →
+              <Link to="/user-login" className="text-primary hover:underline">
+                User Login →
               </Link>
             </div>
           </CardContent>
