@@ -63,6 +63,9 @@ export default function Home() {
             <Button variant="ghost" size="sm" asChild>
               <Link to="/user-login">User Login</Link>
             </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/trader-login">Trader Login</Link>
+            </Button>
             <Button size="sm" asChild>
               <Link to="/admin-login">Admin Login</Link>
             </Button>

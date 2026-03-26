@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
+import { User } from "lucide-react";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import TraderCheckPanel from "@/components/TraderCheckPanel";
 import TraderDirectory from "@/components/TraderDirectory";
 import InvestmentPanel, { type Investment } from "@/components/InvestmentPanel";
@@ -53,9 +53,7 @@ export default function UserDashboard() {
               <p className="text-xs text-muted-foreground">Welcome, {userName}</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-            <LogOut className="h-4 w-4" /> Sign Out
-          </Button>
+          <ProfileDropdown onLogout={handleLogout} />
         </div>
       </header>
 

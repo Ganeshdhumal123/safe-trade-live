@@ -30,6 +30,7 @@ export default function UserLogin() {
     localStorage.setItem("logged_in", "true");
     localStorage.setItem("user_role", "user");
     localStorage.setItem("user_name", user.name);
+    localStorage.setItem("user_email", email);
     setMessage({ text: `Welcome, ${user.name}!`, type: "success" });
     setTimeout(() => navigate("/user-dashboard"), 800);
   };

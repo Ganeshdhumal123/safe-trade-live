@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/lib/banking";
-import { Button } from "@/components/ui/button";
-import { Shield, LogOut } from "lucide-react";
+import { Shield } from "lucide-react";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import TraderCheckPanel from "@/components/TraderCheckPanel";
 import TransactionPanel from "@/components/TransactionPanel";
 import TraderDirectory from "@/components/TraderDirectory";
@@ -32,9 +32,7 @@ export default function AdminDashboard() {
               <p className="text-xs text-muted-foreground">Banking Fraud Prevention — Full Access</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-            <LogOut className="h-4 w-4" /> Sign Out
-          </Button>
+          <ProfileDropdown onLogout={handleLogout} />
         </div>
       </header>
 
