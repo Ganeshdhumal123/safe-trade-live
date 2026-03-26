@@ -1,13 +1,37 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { User, LogOut } from "lucide-react";
 import TraderCheckPanel from "@/components/TraderCheckPanel";
 import TraderDirectory from "@/components/TraderDirectory";
+import InvestmentPanel, { type Investment } from "@/components/InvestmentPanel";
+import InvestmentChart from "@/components/InvestmentChart";
+import TransactionHistory from "@/components/TransactionHistory";
 import Footer from "@/components/Footer";
+
+const STORAGE_KEY = "user_investments";
+
+function loadInvestments(): Investment[] {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveInvestments(investments: Investment[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(investments));
+}
 
 export default function UserDashboard() {
   const navigate = useNavigate();
   const userName = localStorage.getItem("user_name") || "User";
+  const [investments, setInvestments] = useState<Investment[]>(loadInvestments);
+
+  useEffect(() => {
+    saveInvestments(investments);
+  }, [investments]);
+
+  const handleInvest = (investment: Investment) => {
+    setInvestments(prev => [...prev, investment]);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("logged_in");
@@ -36,6 +60,11 @@ export default function UserDashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8 flex-1">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <InvestmentPanel onInvest={handleInvest} />
+          <InvestmentChart investments={investments} />
+        </div>
+        <TransactionHistory investments={investments} />
         <TraderCheckPanel />
         <TraderDirectory />
       </main>
