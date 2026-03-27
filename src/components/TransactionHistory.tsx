@@ -50,9 +50,9 @@ export default function TransactionHistory({ investments }: TransactionHistoryPr
                     <TableCell className="font-mono text-xs">{inv.id}</TableCell>
                     <TableCell>
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                        inv.type === "withdraw" ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"
+                        (inv.type || "invest") === "withdraw" ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"
                       }`}>
-                        {inv.type === "withdraw" ? "Withdraw" : "Invest"}
+                        {(inv.type || "invest") === "withdraw" ? "Withdraw" : "Invest"}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -60,9 +60,9 @@ export default function TransactionHistory({ investments }: TransactionHistoryPr
                       <span className="text-muted-foreground text-xs ml-1">({inv.traderId})</span>
                     </TableCell>
                     <TableCell className={`text-right font-mono font-semibold ${
-                      inv.type === "withdraw" ? "text-destructive" : "text-success"
+                      (inv.type || "invest") === "withdraw" ? "text-destructive" : "text-success"
                     }`}>
-                      {inv.type === "withdraw" ? "-" : "+"}${inv.amount.toLocaleString()}
+                      {(inv.type || "invest") === "withdraw" ? "-" : "+"}₹{inv.amount.toLocaleString()}
                     </TableCell>
                   </TableRow>
                 ))}

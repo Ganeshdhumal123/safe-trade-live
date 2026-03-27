@@ -25,7 +25,7 @@ export default function InvestmentChart({ investments }: InvestmentChartProps) {
     if (!traderMap[inv.traderId]) {
       traderMap[inv.traderId] = { name: inv.traderName, total: 0 };
     }
-    traderMap[inv.traderId].total += inv.type === "withdraw" ? -inv.amount : inv.amount;
+    traderMap[inv.traderId].total += (inv.type || "invest") === "withdraw" ? -inv.amount : inv.amount;
   });
 
   const data = Object.entries(traderMap)
@@ -70,7 +70,7 @@ export default function InvestmentChart({ investments }: InvestmentChartProps) {
           <div>
             <CardTitle>Investment Distribution</CardTitle>
             <CardDescription>
-              Total invested: <span className="font-bold text-foreground">${totalInvested.toLocaleString()}</span>
+              Total invested: <span className="font-bold text-foreground">₹{totalInvested.toLocaleString()}</span>
             </CardDescription>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function InvestmentChart({ investments }: InvestmentChartProps) {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number) => [`$${value.toLocaleString()}`, "Invested"]}
+                formatter={(value: number) => [`₹${value.toLocaleString()}`, "Invested"]}
                 contentStyle={{
                   borderRadius: "0.75rem",
                   border: "1px solid hsl(220, 15%, 88%)",
