@@ -19,7 +19,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
   const getBalanceByTrader = (id: string) => {
     return investments
       .filter(inv => inv.traderId === id)
-      .reduce((sum, inv) => sum + (inv.type === "invest" ? inv.amount : -inv.amount), 0);
+      .reduce((sum, inv) => sum + ((inv.type || "invest") === "invest" ? inv.amount : -inv.amount), 0);
   };
 
   const handleWithdraw = () => {
@@ -83,7 +83,7 @@ export default function WithdrawPanel({ investments, onWithdraw }: WithdrawPanel
           seen.forEach(id => {
             const bal = investments
               .filter(inv => inv.traderId === id)
-              .reduce((sum, inv) => sum + (inv.type === "invest" ? inv.amount : -inv.amount), 0);
+              .reduce((sum, inv) => sum + ((inv.type || "invest") === "invest" ? inv.amount : -inv.amount), 0);
             if (bal > 0) {
               const name = investments.find(inv => inv.traderId === id)?.traderName || id;
               balances.push({ id, name, balance: bal });
