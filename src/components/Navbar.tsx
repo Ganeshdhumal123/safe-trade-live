@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Shield, UserCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Shield, UserCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 
 function getDashboardPath(role: string | null) {
   switch (role) {
@@ -13,6 +14,7 @@ function getDashboardPath(role: string | null) {
 export default function Navbar() {
   const isLoggedIn = localStorage.getItem("logged_in") === "true";
   const role = localStorage.getItem("user_role");
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
@@ -25,6 +27,9 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-9 w-9">
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
           {isLoggedIn ? (
             <Button variant="default" size="sm" asChild className="gap-2">
               <Link to={getDashboardPath(role)}>
