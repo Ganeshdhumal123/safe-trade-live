@@ -72,7 +72,7 @@ export default function TraderRegistration({ onRegistered }: TraderRegistrationP
     }
 
     setOtpError("");
-    const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc);
+    const res = registerTrader(name, pan, aadhaar, bankAccount, ifsc, email);
     setResult(res);
     if (res.success) {
       setName(""); setPan(""); setAadhaar(""); setBankAccount(""); setIfsc("");
