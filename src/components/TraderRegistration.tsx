@@ -11,7 +11,7 @@ interface TraderRegistrationProps {
   onRegistered?: () => void;
 }
 
-type Step = "form" | "otp";
+type Step = "form" | "otp" | "credentials";
 
 export default function TraderRegistration({ onRegistered }: TraderRegistrationProps) {
   const [name, setName] = useState("");
