@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Briefcase, LogIn, ArrowLeft } from "lucide-react";
+import { Briefcase, LogIn, ArrowLeft, Fingerprint } from "lucide-react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
 
 const DEMO_TRADERS = [
   { email: "trader@bank.com", password: "trader1234", name: "Global Payments Corp", traderId: "T1" },
