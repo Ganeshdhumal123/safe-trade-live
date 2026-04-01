@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Briefcase, LogIn, ArrowLeft } from "lucide-react";
+import { Briefcase, LogIn, ArrowLeft, Fingerprint } from "lucide-react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
 
 const DEMO_TRADERS = [
   { email: "trader@bank.com", password: "trader1234", name: "Global Payments Corp", traderId: "T1" },
@@ -18,11 +19,20 @@ export default function TraderLogin() {
   const [email, setEmail] = useState("trader@bank.com");
   const [password, setPassword] = useState("trader1234");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const currentDeviceId = generateDeviceId();
+  const deviceInfo = getDeviceInfo();
 
   const handleLogin = () => {
     const trader = DEMO_TRADERS.find(t => t.email === email && t.password === password);
     if (!trader) {
       setMessage({ text: "Invalid email or password.", type: "error" });
+      return;
+    }
+    // Check registered traders for device ID match
+    const registeredTraders = JSON.parse(localStorage.getItem("registered_traders") || "[]");
+    const registeredTrader = registeredTraders.find((t: any) => t.email === email);
+    if (registeredTrader && registeredTrader.deviceId !== currentDeviceId) {
+      setMessage({ text: "Unrecognized device. Please login from your registered device.", type: "error" });
       return;
     }
     localStorage.setItem("logged_in", "true");
@@ -57,6 +67,15 @@ export default function TraderLogin() {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="device" className="flex items-center gap-1.5">
+                <Fingerprint className="h-3.5 w-3.5" /> Device ID (Auto-detected)
+              </Label>
+              <Input id="device" value={currentDeviceId} readOnly className="font-mono text-sm bg-muted" />
+              <p className="text-xs text-muted-foreground">
+                {deviceInfo.os} · {deviceInfo.browser} · {deviceInfo.screen}
+              </p>
             </div>
 
             {message && (
