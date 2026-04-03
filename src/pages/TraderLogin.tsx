@@ -37,6 +37,32 @@ export default function TraderLogin() {
       return;
     }
 
+    // Device ID verification
+    if (demoTrader) {
+      // Demo traders: register device on first login, then enforce
+      const demoDeviceKey = `trader_device_${demoTrader.traderId}`;
+      const storedDeviceId = localStorage.getItem(demoDeviceKey);
+      if (storedDeviceId && storedDeviceId !== currentDeviceId) {
+        setMessage({ text: "⚠ Unrecognized device! Login blocked for security. Use the device you first logged in with.", type: "error" });
+        return;
+      }
+      if (!storedDeviceId) {
+        localStorage.setItem(demoDeviceKey, currentDeviceId);
+      }
+    } else if (regTrader) {
+      // Registered traders: check device ID saved during registration
+      const regDeviceKey = `trader_device_${regTrader.traderId}`;
+      const storedDeviceId = localStorage.getItem(regDeviceKey);
+      if (storedDeviceId && storedDeviceId !== currentDeviceId) {
+        setMessage({ text: "⚠ Unrecognized device! Login blocked for security. Use the device registered by your admin.", type: "error" });
+        return;
+      }
+      // If no device stored yet, bind to current device
+      if (!storedDeviceId) {
+        localStorage.setItem(regDeviceKey, currentDeviceId);
+      }
+    }
+
     const traderName = demoTrader?.name || regTrader?.name;
     const traderId = demoTrader?.traderId || regTrader?.traderId;
 

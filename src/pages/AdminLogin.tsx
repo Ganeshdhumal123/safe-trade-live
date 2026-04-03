@@ -1,33 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { login, initDemoUser } from "@/lib/banking";
-import { Shield, LogIn, Fingerprint, ArrowLeft } from "lucide-react";
+import { initDemoUser } from "@/lib/banking";
+import { generateDeviceId, getDeviceInfo } from "@/lib/deviceId";
+import { Shield, LogIn, Fingerprint, ArrowLeft, Monitor, Globe, Maximize } from "lucide-react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { useEffect } from "react";
+
+const ADMIN_DEVICE_ID_KEY = "admin_device_id";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("admin@bank.com");
   const [password, setPassword] = useState("bank1234");
-  const [deviceId, setDeviceId] = useState("DEVICE-XK7-2024");
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const currentDeviceId = generateDeviceId();
+  const deviceInfo = getDeviceInfo();
 
-  useEffect(() => { initDemoUser(); }, []);
+  useEffect(() => {
+    initDemoUser();
+    // Register admin device on first visit
+    if (!localStorage.getItem(ADMIN_DEVICE_ID_KEY)) {
+      localStorage.setItem(ADMIN_DEVICE_ID_KEY, currentDeviceId);
+    }
+  }, []);
 
   const handleLogin = () => {
-    const result = login(email, password, deviceId);
-    setMessage({ text: result.message, type: result.success ? "success" : "error" });
-    if (result.success) {
-      localStorage.setItem("user_role", "admin");
-      localStorage.setItem("user_name", "Alex Morgan");
-      localStorage.setItem("user_email", email);
-      setTimeout(() => navigate("/admin-dashboard"), 800);
+    const stored = JSON.parse(localStorage.getItem("demo_user") || "{}");
+
+    if (email !== stored.email || password !== stored.password) {
+      setMessage({ text: "Invalid email or password.", type: "error" });
+      return;
     }
+
+    const registeredDeviceId = localStorage.getItem(ADMIN_DEVICE_ID_KEY);
+    if (currentDeviceId !== registeredDeviceId) {
+      setMessage({ text: "⚠ Unrecognized device detected! Login blocked for security.", type: "error" });
+      return;
+    }
+
+    localStorage.setItem("logged_in", "true");
+    localStorage.setItem("user_role", "admin");
+    localStorage.setItem("user_name", "Alex Morgan");
+    localStorage.setItem("user_email", email);
+    setMessage({ text: "Welcome back, Alex Morgan!", type: "success" });
+    setTimeout(() => navigate("/admin-dashboard"), 800);
   };
 
   return (
@@ -54,12 +74,21 @@ export default function AdminLogin() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="device" className="flex items-center gap-1.5">
-                <Fingerprint className="h-3.5 w-3.5" /> Device ID
-              </Label>
-              <Input id="device" value={deviceId} onChange={e => setDeviceId(e.target.value)} className="font-mono text-sm" />
-              <p className="text-xs text-muted-foreground">Try changing this to simulate a new device login attempt.</p>
+
+            {/* Device Info - Auto-detected, read-only */}
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                <Fingerprint className="w-4 h-4" />
+                Current Device ID
+              </div>
+              <p className="font-mono text-sm font-bold text-foreground tracking-wider">{currentDeviceId}</p>
+              <div className="grid grid-cols-2 gap-1.5 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1"><Monitor className="w-3 h-3" /> {deviceInfo.os}</span>
+                <span className="flex items-center gap-1"><Globe className="w-3 h-3" /> {deviceInfo.browser}</span>
+                <span className="flex items-center gap-1"><Maximize className="w-3 h-3" /> {deviceInfo.screen}</span>
+                <span className="flex items-center gap-1"><Fingerprint className="w-3 h-3" /> {deviceInfo.platform}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Must match the registered admin device.</p>
             </div>
 
             {message && (
