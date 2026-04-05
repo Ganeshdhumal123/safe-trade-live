@@ -49,6 +49,11 @@ const scaleIn = {
 };
 
 export default function Home() {
+  const isLoggedIn = localStorage.getItem("logged_in") === "true";
+  const role = localStorage.getItem("user_role");
+
+  const dashboardPath = role === "admin" ? "/admin-dashboard" : role === "trader" ? "/trader-dashboard" : "/user-dashboard";
+
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
       <Navbar />
@@ -99,17 +104,34 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.45 }}
             className="flex items-center justify-center gap-4 flex-wrap"
           >
-            <Button size="lg" asChild className="gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
-              <Link to="/admin-login">
-                Admin Dashboard <ArrowRight className="w-4 h-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
-              <Link to="/user-login">User Portal</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
-              <Link to="/trader-login">Trader Login</Link>
-            </Button>
+            {isLoggedIn ? (
+              <>
+                <Button size="lg" asChild className="gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+                  <Link to={dashboardPath}>
+                    Go to Dashboard <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+                {role === "user" && (
+                  <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
+                    <Link to="/user-dashboard">Invest Now</Link>
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <Button size="lg" asChild className="gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+                  <Link to="/admin-login">
+                    Admin Dashboard <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
+                  <Link to="/user-login">User Portal</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild className="hover:bg-accent transition-colors">
+                  <Link to="/trader-login">Trader Login</Link>
+                </Button>
+              </>
+            )}
           </motion.div>
         </div>
       </section>
