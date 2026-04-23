@@ -35,6 +35,12 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Diagnostic logging (no secrets exposed) — helps identify mis-pasted creds.
+    console.log(
+      `Gmail auth attempt — user="${GMAIL_USER}" (len=${GMAIL_USER.length}), ` +
+      `password length=${GMAIL_APP_PASSWORD.length} (expected 16)`
+    );
+
     const otp = String(Math.floor(1000 + Math.random() * 9000));
 
     const client = new SMTPClient({
