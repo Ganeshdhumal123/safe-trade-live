@@ -39,8 +39,8 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold text-foreground">Technology & Disclaimer</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              SafeTrade is built with React, TypeScript, Tailwind CSS, and Lovable Cloud for backend
-              services including authentication, database management, and serverless edge functions.
+              SafeTrade is built with React, TypeScript, and Tailwind CSS on the frontend, with a
+              cloud backend handling authentication, data storage, and serverless services.
               Please note that this is a demonstration application — no real banking data is processed
               or stored. All trader records, transactions, and risk scores are simulated for educational
               purposes only. The platform is not affiliated with any financial institution.
